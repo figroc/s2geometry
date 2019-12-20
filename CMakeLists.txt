@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(s2-geometry)
+project(s2geometry VERSION 0.9.0)
 
 include(CMakeDependentOption)
 include(CheckCXXCompilerFlag)
@@ -8,6 +8,7 @@ include(FeatureSummary)
 include(FindPackageHandleStandardArgs)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Avoid "Policy CMP0042 is not set" warning on macOS.
 if (APPLE)
     set(CMAKE_MACOSX_RPATH TRUE)
@@ -402,7 +403,7 @@ install(FILES src/s2/util/units/length-units.h
         DESTINATION include/s2/util/units)
 install(TARGETS s2 DESTINATION lib)
 
-message("GTEST_ROOT: ${GTEST_ROOT}")
+message(" * GTEST_ROOT: ${GTEST_ROOT}")
 if (GTEST_ROOT)
   add_library(s2testing STATIC
               src/s2/s2builderutil_testing.cc
