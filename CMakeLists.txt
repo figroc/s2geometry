@@ -34,6 +34,8 @@ option(BUILD_SHARED_LIBS "Build shared libraries instead of static." ON)
 add_feature_info(SHARED_LIBS BUILD_SHARED_LIBS
                  "builds shared libraries instead of static.")
 
+option(BUILD_PYWRAPS2 "Build s2 python wrapper using swig." OFF)
+
 option(BUILD_EXAMPLES "Build s2 documentation examples." ON)
 
 feature_summary(WHAT ALL)
@@ -62,9 +64,11 @@ endif()
 find_package(OpenSSL REQUIRED)
 # pthreads isn't used directly, but this is still required for std::thread.
 find_package(Threads REQUIRED)
-find_package(SWIG)
-find_package(PythonInterp)
-find_package(PythonLibs)
+if (BUILD_PYWRAPS2)
+    find_package(SWIG REQUIRED)
+    find_package(PythonInterp REQUIRED)
+    find_package(PythonLibs REQUIRED)
+endif()
 
 if (WIN32)
     # Use unsigned characters

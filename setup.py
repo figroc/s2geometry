@@ -23,7 +23,8 @@ class CMakeBuildExt(build_ext):
         extdir = os.path.dirname(self.get_ext_fullpath(ext.name))
         extdir = os.path.abspath(os.path.join(extdir, ext.name))
 
-        cmake_args = ["-DBUILD_SHARED_LIBS=OFF",
+        cmake_args = ["-DBUILD_PYWRAPS2=ON",
+                      "-DBUILD_SHARED_LIBS=OFF",
                       "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY="+extdir,
                       "-DCMAKE_SWIG_OUTDIR="+extdir,
                       "-DPYTHON_EXECUTABLE="+sys.executable]
