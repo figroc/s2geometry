@@ -2,9 +2,10 @@
 set -e
 cd $(dirname ${BASH_SOURCE[0]})/../..
 
-image="dockcross/manylinux2010-x64-python"
-docker build -t ${image} -<<'EOF'
-FROM dockcross/manylinux2010-x64
+DOCKCROSS=${DOCKCROSS:-manylinux2010}
+DOCKIMAGE="dockcross/${DOCKCROSS}-x64-python"
+(
+echo "FROM dockcross/${DOCKCROSS}-x64" && cat <<'EOF'
 LABEL maintainer="Figroc Chen<figroc@gmail.com>"
 
 RUN yum install -y \
@@ -40,8 +41,12 @@ RUN printf '%s\n' '#!/bin/bash' 'set -e' \
       '  ${pip} -v wheel ${dist}/*.tar.gz' \
       'done' \
       'for whl in *.whl; do' \
-      '  auditwheel repair --plat ${AUDITWHEEL_PLAT} -w ${dist} ${whl}' \
+      '  auditwheel repair ${whl} \' \
+      '    -w ${dist} \' \
+      '    --plat ${AUDITWHEEL_PLAT} \' \
+      '    ${ELF_PATCHER:+--elf-patcher ${ELF_PATCHER}} \' \
       'done' \
     > build-wheel-from-sdist
 EOF
-docker run --rm -v $(pwd)/${1:-dist}:/dist --entrypoint bash ${image} build-wheel-from-sdist
+) | docker build -t ${DOCKIMAGE} -
+docker run --rm -v $(pwd)/${1:-dist}:/dist --entrypoint bash ${DOCKIMAGE} build-wheel-from-sdist
