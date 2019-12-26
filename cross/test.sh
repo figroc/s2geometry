@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-cd $(dirname ${BASH_SOURCE[0]})/../..
+cd $(dirname ${BASH_SOURCE[0]})/..
 
 for whl in ${1:-dist}/*-cp3*.whl; do
   ver=$(expr ${whl##*/} : '.*-cp3\(.\)-.*')
