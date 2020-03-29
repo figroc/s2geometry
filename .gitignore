@@ -1,3 +1,10 @@
+# cmake
 build/
+
+# setuptools
 dist/
 *.egg-info/
+
+# vscode
+.vscode
+.devcontainer
