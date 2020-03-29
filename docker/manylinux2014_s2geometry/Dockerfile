@@ -3,6 +3,7 @@ FROM quay.io/pypa/manylinux2014_x86_64
 # install openssl, swig, wget
 RUN yum install -y swig3 \
   && yum install -y openssl-devel \
+  && yum install -y openssl-static \
   && yum install -y wget
 
 # install cmake 3.17
