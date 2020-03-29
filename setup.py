@@ -2,6 +2,7 @@ import os
 import sys
 import platform
 import subprocess
+import multiprocessing
 
 from setuptools import setup, Extension
 from setuptools.command.build_py import build_py
@@ -40,7 +41,7 @@ class CMakeBuildExt(build_ext):
             build_args += ["--", "/m"]
         else:
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
-            build_args += ["--", "-j2"]
+            build_args += ["--", "-j{}".format(multiprocessing.cpu_count())]
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
