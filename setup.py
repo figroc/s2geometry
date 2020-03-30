@@ -26,6 +26,7 @@ class CMakeBuildExt(build_ext):
 
         cmake_args = ["-DBUILD_PYWRAPS2=ON",
                       "-DBUILD_SHARED_LIBS=OFF",
+                      "-DOPENSSL_USE_STATIC_LIBS=TRUE",
                       "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY="+extdir,
                       "-DCMAKE_SWIG_OUTDIR="+extdir,
                       "-DPYTHON_EXECUTABLE="+sys.executable]
@@ -49,7 +50,6 @@ class CMakeBuildExt(build_ext):
                               cwd=self.build_temp)
         subprocess.check_call(["cmake", "--build", "."] + build_args,
                               cwd=self.build_temp)
-
 
 class FilterBuildPy(build_py):
     @staticmethod
