@@ -1,8 +1,8 @@
 FROM quay.io/pypa/manylinux2014_x86_64
+LABEL maintainer="Cheng Chi<cheng-chi@outlook.com>"
 
 # install openssl, swig, wget
 RUN yum install -y swig3 \
-  && yum install -y openssl-devel \
   && yum install -y openssl-static \
   && yum install -y wget
 
