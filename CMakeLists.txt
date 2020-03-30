@@ -62,6 +62,10 @@ if (WITH_GFLAGS)
 endif()
 
 find_package(OpenSSL REQUIRED)
+if (OPENSSL_USE_STATIC_LIBS)
+  find_package(ZLIB REQUIRED)
+endif()
+
 # pthreads isn't used directly, but this is still required for std::thread.
 find_package(Threads REQUIRED)
 if (BUILD_PYWRAPS2)
@@ -205,8 +209,13 @@ add_library(s2
             src/s2/util/units/length-units.cc)
 target_link_libraries(
     s2
-    ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES} ${OPENSSL_LIBRARIES}
+    ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT})
+
+# openssl static library requries libz
+if (OPENSSL_USE_STATIC_LIBS)
+    target_link_libraries(s2 ${ZLIB_LIBRARIES})
+endif()
 
 # Allow other CMake projects to use this one with:
 # list(APPEND CMAKE_MODULE_PATH "<path_to_s2geometry_dir>/third_party/cmake")

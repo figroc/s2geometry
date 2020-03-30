@@ -2,6 +2,7 @@ import os
 import sys
 import platform
 import subprocess
+import multiprocessing
 
 from setuptools import setup, Extension
 from setuptools.command.build_py import build_py
@@ -25,6 +26,7 @@ class CMakeBuildExt(build_ext):
 
         cmake_args = ["-DBUILD_PYWRAPS2=ON",
                       "-DBUILD_SHARED_LIBS=OFF",
+                      "-DOPENSSL_USE_STATIC_LIBS=TRUE",
                       "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY="+extdir,
                       "-DCMAKE_SWIG_OUTDIR="+extdir,
                       "-DPYTHON_EXECUTABLE="+sys.executable]
@@ -40,7 +42,7 @@ class CMakeBuildExt(build_ext):
             build_args += ["--", "/m"]
         else:
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
-            build_args += ["--", "-j2"]
+            build_args += ["--", "-j{}".format(multiprocessing.cpu_count())]
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
@@ -48,7 +50,6 @@ class CMakeBuildExt(build_ext):
                               cwd=self.build_temp)
         subprocess.check_call(["cmake", "--build", "."] + build_args,
                               cwd=self.build_temp)
-
 
 class FilterBuildPy(build_py):
     @staticmethod
