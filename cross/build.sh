@@ -2,13 +2,9 @@
 set -e
 cd $(dirname ${BASH_SOURCE[0]})/..
 
-DOCKER_FILE_DIR="cross/docker/manylinux2014_s2geometry"
-DOCKER_TAG="manylinux2014_s2geometry"
-SOURCE_DIR="/s2geometry"
-
-docker build ${DOCKER_FILE_DIR} -t ${DOCKER_TAG}
+DOCKCROSS=${DOCKCROSS:-manylinux2010}
+DOCKIMAGE="figroc/dockcross:${DOCKCROSS}"
 docker run --rm \
-  -v $(pwd):${SOURCE_DIR}\
+  -v $(pwd)/${1:-dist}:/dist \
   --entrypoint bash \
-  ${DOCKER_TAG} \
-  -c "cd ${SOURCE_DIR}; cross/bdist_wheel_helper.sh"
+  ${DOCKIMAGE} build-wheel-from-sdist

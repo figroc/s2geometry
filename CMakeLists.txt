@@ -209,7 +209,8 @@ add_library(s2
             src/s2/util/units/length-units.cc)
 target_link_libraries(
     s2
-    ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES} ${OPENSSL_CRYPTO_LIBRARY}
+    ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES}
+    ${OPENSSL_CRYPTO_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT})
 
 # openssl static library requries libz
