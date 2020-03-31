@@ -12,7 +12,7 @@ else()
     swig_add_library(pywraps2 LANGUAGE python SOURCES s2.i)
 endif()
 
-swig_link_libraries(pywraps2 ${PYTHON_LIBRARIES} s2)
+swig_link_libraries(pywraps2 s2)
 enable_testing()
 add_test(NAME pywraps2_test COMMAND
          ${PYTHON_EXECUTABLE}
