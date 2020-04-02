@@ -1,5 +1,5 @@
 include(${SWIG_USE_FILE})
-include_directories(${PYTHON_INCLUDE_PATH})
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 set(CMAKE_SWIG_FLAGS "")
 set_property(SOURCE s2.i PROPERTY SWIG_FLAGS "-module" "pywraps2")
@@ -13,6 +13,10 @@ else()
 endif()
 
 swig_link_libraries(pywraps2 s2)
+if (LINK_PYTHONLIB)
+    swig_link_libraries(pywraps2 ${PYTHON_LIBRARIES})
+endif()
+
 enable_testing()
 add_test(NAME pywraps2_test COMMAND
          ${PYTHON_EXECUTABLE}

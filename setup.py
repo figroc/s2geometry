@@ -1,6 +1,7 @@
 import os
 import sys
 import platform
+import sysconfig
 import subprocess
 import multiprocessing
 
@@ -25,11 +26,13 @@ class CMakeBuildExt(build_ext):
         extdir = os.path.abspath(os.path.join(extdir, ext.name))
 
         cmake_args = ["-DBUILD_PYWRAPS2=ON",
+                      "-DLINK_PYTHONLIB=OFF",
                       "-DBUILD_SHARED_LIBS=OFF",
                       "-DOPENSSL_USE_STATIC_LIBS=TRUE",
                       "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY="+extdir,
                       "-DCMAKE_SWIG_OUTDIR="+extdir,
-                      "-DPYTHON_EXECUTABLE="+sys.executable]
+                      "-DPYTHON_EXECUTABLE="+sys.executable,
+                      "-DPYTHON_INCLUDE_DIRS="+sysconfig.get_path("include")]
 
         cfg = "Debug" if self.debug else "Release"
         build_args = ["--config", cfg]

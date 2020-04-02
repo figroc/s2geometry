@@ -35,6 +35,7 @@ add_feature_info(SHARED_LIBS BUILD_SHARED_LIBS
                  "builds shared libraries instead of static.")
 
 option(BUILD_PYWRAPS2 "Build s2 python wrapper using swig." OFF)
+option(LINK_PYTHONLIB "Link python libraries expilictly." ON)
 
 option(BUILD_EXAMPLES "Build s2 documentation examples." ON)
 
@@ -71,7 +72,9 @@ find_package(Threads REQUIRED)
 if (BUILD_PYWRAPS2)
     find_package(SWIG REQUIRED)
     find_package(PythonInterp REQUIRED)
-    find_package(PythonLibs REQUIRED)
+    if (LINK_PYTHONLIB OR NOT PYTHON_INCLUDE_DIRS)
+        find_package(PythonLibs REQUIRED)
+    endif()
 endif()
 
 if (WIN32)
@@ -548,6 +551,6 @@ if (BUILD_EXAMPLES AND TARGET s2testing)
   add_subdirectory("doc/examples" examples)
 endif()
 
-if (${SWIG_FOUND} AND ${PYTHONLIBS_FOUND})
+if (BUILD_PYWRAPS2)
   add_subdirectory("src/python" python)
 endif()
