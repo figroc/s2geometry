@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
 
-project(s2geometry VERSION 0.9.0)
+project(s2-geometry
+	VERSION 0.10.0)
 
 include(CMakeDependentOption)
 include(CheckCXXCompilerFlag)
@@ -35,7 +36,6 @@ add_feature_info(SHARED_LIBS BUILD_SHARED_LIBS
                  "builds shared libraries instead of static.")
 
 option(BUILD_PYWRAPS2 "Build s2 python wrapper using swig." OFF)
-option(LINK_PYTHONLIB "Link python libraries expilictly." ON)
 
 option(BUILD_EXAMPLES "Build s2 documentation examples." ON)
 
@@ -71,10 +71,9 @@ endif()
 find_package(Threads REQUIRED)
 if (BUILD_PYWRAPS2)
     find_package(SWIG REQUIRED)
-    find_package(PythonInterp REQUIRED)
-    if (LINK_PYTHONLIB OR NOT PYTHON_INCLUDE_DIRS)
-        find_package(PythonLibs REQUIRED)
-    endif()
+    # Use Python3_ROOT_DIR to help find python3, if the correct location is not
+    # being found by default.
+    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 endif()
 
 if (WIN32)
@@ -98,7 +97,7 @@ endif()
 # OPENSSL_ROOT_DIR=/usr/local/opt/openssl cmake ..
 include_directories(
     ${GFLAGS_INCLUDE_DIRS} ${GLOG_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR}
-    ${PYTHON_INCLUDE_DIRS})
+    ${Python3_INCLUDE_DIRS})
 include_directories(src)
 
 add_library(s2
@@ -226,6 +225,11 @@ endif()
 # add_subdirectory(<path_to_s2geometry_dir> s2geometry)
 # target_link_libraries(<target_name> s2)
 target_include_directories(s2 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Add version information to the target
+set_target_properties(s2 PROPERTIES
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    VERSION ${PROJECT_VERSION})
 
 # We don't need to install all headers, only those
 # transitively included by s2 headers we are exporting.
